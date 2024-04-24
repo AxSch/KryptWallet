@@ -20,5 +20,13 @@ describe("Partnership", () => {
 
         expect(await deployedContract.partner1()).to.equal(partner1.address);
         expect(await deployedContract.partner2()).to.equal(partner2.address);
-    })
+    });
+
+    it("should throw an error with invalid partners", async () => {
+        const Contract = await ethers.getContractFactory("Partnership");
+        const [partner1] = await ethers.getSigners();
+
+        await expect(Contract.deploy(partner1.address, ethers.ZeroAddress)).to.be.revertedWith("Invalid partner address");
+        await expect(Contract.deploy(ethers.ZeroAddress, partner1.address)).to.be.revertedWith("Invalid partner address");
+    });
 })
