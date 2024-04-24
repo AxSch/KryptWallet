@@ -3,17 +3,15 @@ import { run, ethers } from "hardhat";
 async function main() {
     await run("compile");
 
-    const [owner, sharer] = await ethers.getSigners();
-    const addresses = [owner.address, sharer.address];
-
+    const [partner1, partner2] = await ethers.getSigners();
     const Contract = await ethers.getContractFactory("Partnership");
-    const contract = await Contract.deploy(addresses);
+    const contract = await Contract.deploy(partner1.address, partner2.address);
 
     const deployment = contract.deploymentTransaction();
 
     await deployment?.wait();
 
-    await console.log("Contract deployed to:", await contract.addresses(0));
+    await console.log("Contract deployed to:", await contract.getAddress());
 }
 
 main()
